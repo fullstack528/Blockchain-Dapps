@@ -1,0 +1,69 @@
+{
+  "name": "cspr",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@casperholders/core": "^3.1.0",
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@ethersproject/bignumber": "^5.6.2",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.93",
+    "@mui/material": "^5.9.3",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "@toruslabs/casper-embed": "^1.1.2",
+    "@types/jest": "^27.4.0",
+    "@types/node": "^16.11.24",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "big-number": "^2.0.0",
+    "blakejs": "^1.2.1",
+    "casper-cep47-js-client": "1.0.0",
+    "casper-erc20-js-client": "^0.2.0",
+    "casper-js-client-helper": "^1.0.1",
+    "casper-js-sdk": "2.9.1",
+    "ethers": "^5.6.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-notifications": "^1.7.4",
+    "react-redux": "^8.0.2",
+    "react-responsive": "^9.0.0-beta.10",
+    "react-scripts": "4.0.3",
+    "redux": "^4.2.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.1",
+    "serialize-javascript": "^6.0.0",
+    "tachyons": "^4.12.0",
+    "ts-results": "^3.3.0",
+    "typescript": "^4.5.5",
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.0.0",
+    "zustand-persist": "^0.4.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
