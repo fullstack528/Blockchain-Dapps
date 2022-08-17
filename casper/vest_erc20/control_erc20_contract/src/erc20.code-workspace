@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "../../../vestgit/erc20"
+		},
+		{
+			"path": "../../../../deployContractByJS"
+		},
+		{
+			"path": "../../../vestgit/vestmod"
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {
+		"makefile.extensionOutputFolder": "./.vscode"
+	}
+}
