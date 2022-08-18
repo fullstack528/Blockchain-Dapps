@@ -1,0 +1,336 @@
+$(get_path_to_client) put-deploy \
+--chain-name "casper-net-1" \
+--secret-key CasperWork/jackstar_secret_key.pem \
+--payment-amount 2500000 \
+--session-path CasperWork/counter-master/contracts/counter-define/target/wasm32-unknown-unknown/release/counter-define.wasm \
+--node-address http://localhost:11101
+
+casper-client put-deploy \
+--chain-name "casper-net-1" \
+--secret-key edkeyNew/secret_key.pem \
+--payment-amount 2500000 \
+--session-path CasperWork/counter-master/contracts/counter-define/target/wasm32-unknown-unknown/release/counter-define.wasm \
+--node-address http://localhost:11101
+
+casper-client put-deploy \
+    -n http://localhost:11101 \
+    --chain-name casper-net-1 \
+    -k secp256k1-keys/secret_key.pem -p 5000000000000 -s CasperWork/counter-master/contracts/counter-define/target/wasm32-unknown-unknown/release/counter-define.wasm
+
+curl -s http://13.209.252.30:7777/events/deploys
+curl -s http://13.209.252.30:3145/events/deploys
+
+
+  "data": "deploy parameter failure: account 1db644748720896236ef3d7506a4385acbe7f9d6816660eed3954fd9272efeba does not exist at prestate_hash: b450462f2fddc62f810ec765340786c3161f86fcd7dfc7b71b4ca1e9229d6e77",
+  "message": "Invalid Deploy"
+
+casper-client put-deploy \
+    --node-address http://171.225.248.152:20678 \
+    --chain-name casper-test \
+    --secret-key secp256k1-keys/secret_key.pem \
+    --payment-amount 2500000  \
+    --session-path CasperWork/counter-master/contracts/counter-define/target/wasm32-unknown-unknown/release/counter-define.wasm
+
+
+And I have more a question.
+testnet deploy problem
+I selected one of node-address on https://testnet.cspr.live/tools/peers
+
+And I tried ping:
+ping 171.225.248.152
+but no answer.
+
+And following command is also not working
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key ed25519-keys/jackstar_secret_key.pem \
+    --payment-amount 500000000000  \
+    --session-path CasperWork/vestgit/vestmod/target/wasm32-unknown-unknown/release/vest_mod.wasm
+------
+Failed to get RPC response: error sending request for url (http://171.225.248.152:7777/rpc): error trying to connect: tcp connect error: Connection timed out (os error 110)
+---------------
+
+casper-client account-address --public-key secp256k1-keys/public_key.pem
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 50000000000\
+    --session-path CasperWork/counter-master/contracts/counter-define/target/wasm32-unknown-unknown/release/counter-define.wasm
+deploy hash : d7d96eb26aa403f75893b5f1023fee16554bf7b61759cbc8ebf73c77df2cbb88
+
+casper-client get-deploy --node-address http://3.208.91.63:7777 ab30cca5ba4c5cfa56f3bd1e9721f03b93bf5ac6fceb1223aba84199bbc9929e
+{
+	find writecontract
+}
+------------trasnsfer CSPR to local------------------
+casper-client transfer \
+--transfer-id 1342352352121233 \
+--node-address http://localhost:11101 \
+--chain-name casper-net-1 \
+--target-account 012b5d5d7c36ffb8f0459a8860940542509c15397b5453a852fc9af982251989d8 \
+--secret-key CasperWork/jackstar_secret_key.pem \
+--payment-amount 100000000 \
+--amount 10000000000 
+
+-----------------
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-6da13c863e162e88ecd42ed933de3cb5c4622df02524a1d73a9d2d1c38efa027 \
+    --session-entry-point "counter_get" 
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-6da13c863e162e88ecd42ed933de3cb5c4622df02524a1d73a9d2d1c38efa027 \
+    --session-entry-point "counter_inc"
+
+casper-client get-deploy --node-address http://3.208.91.63:7777 38c7085a6e147119d77b621dfd8dba5da3883c9f3e5a6e30dd5865591f78fcea
+------------------------NFT test------------
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key ed25519-keys/jackstar_secret_key.pem \
+    --payment-amount 100000000000  \
+    --session-path /root/CasperWork/vestgit/casper-nft-cep47/target/wasm32-unknown-unknown/release/cep47-token.wasm
+fb1618ebb10a5d2adbb2030e35a37ef82997cac14d55f93d014bd84e5d41914c
+
+---------------------------------------------
+
+------------------------------ vestmod ----------------
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 100000000000   \
+   --session-path CasperWork/vestgit/vestmod/target/wasm32-unknown-unknown/release/vest_mod.wasm
+
+
+casper-client get-deploy --node-address http://3.208.91.63:7777 44b3acfb11c67cbd43608bc60a1792a419cc18a17ca1650ea5cf12ad856882d4
+casper-client get-deploy --node-address http://3.208.91.63:7777 328c9c164e20a56d5f4f8f68298b8888ba7156bca82f564d68ae8196635a7604
+hash-0072c68050b9cb0360a2e1790813fb9856f68ffc123115daca042e69bd3f9fc7
+
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-394057c8c957aea3f266b61e10235b35f6e5246e9a5baf40de68b230ae3f38d9 \
+    --session-entry-point "ent_pause"
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-a6a87c5cfeb756abb9a089628f6de1545dfd07d0b764f0477255add925c5c4e8 \
+    --session-entry-point "ent_pause_test"
+   
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-394057c8c957aea3f266b61e10235b35f6e5246e9a5baf40de68b230ae3f38d9 \
+    --session-entry-point "ent_unpause"
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-394057c8c957aea3f266b61e10235b35f6e5246e9a5baf40de68b230ae3f38d9 \
+    --session-entry-point "ent_withdraw"
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/jackstar_secret_key.pem \
+    --payment-amount 100000000 \
+    --session-hash hash-394057c8c957aea3f266b61e10235b35f6e5246e9a5baf40de68b230ae3f38d9 \
+    --session-entry-point "ent_admin_release"
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key CasperWork/secret_key.pem \
+    --payment-amount 1000000000 \
+    --session-hash hash-0e75e93b424947440a6581eedcb174c877207be7d519e0a7ad0dd775e39528e1 \
+    --session-entry-point "ent_init" \
+    --session-arg "admin:account_hash='account-hash-1db644748720896236ef3d7506a4385acbe7f9d6816660eed3954fd9272efeba'" \
+    --session-arg "recipient:account_hash='account-hash-4b05191dadb56bf3b7988167e771023298f609b6596a65fe784cfecd1f262000'" \
+    --session-arg "cliff_timestamp:u128='1340'" \
+    --session-arg "cliff_amount:u128='2021'" \
+    --session-arg "drip_duration:u128='20643'" \
+    --session-arg "drip_amount:u128='2011'" \
+    --session-arg "total_amount:u128='1220'" \
+    --session-arg "admin_release_duration:u128='120'" 
+
+casper-client put-deploy
+    --node-address http://3.143.158.19:7777 \
+    --chain-name integration-test \
+    --secret-key ~/casper/demo/user_b/secret_key.pem \
+    --payment-amount "100000000" \
+    --session-hash hash-394057c8c957aea3f266b61e10235b35f6e5246e9a5baf40de68b230ae3f38d9 \
+    --session-entry-point "ent_pause" \
+    --session-arg "recipient:key='account-hash-1db644748720896236ef3d7506a4385acbe7f9d6816660eed3954fd9272efeba'" \
+    --session-arg "admin:u256='20'"
+
+    casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 100000000000   \
+   --session-path CasperWork/samplework/aaaa/contract/target/wasm32-unknown-unknown/release/contract.wasm \
+    --session-arg "name:string='jacksonfirsttoken'" \
+    --session-arg "symbol:string='jackt'" \
+    --session-arg "decimals:u8='6'" \
+    --session-arg "total_supply:u256='100000000000'"
+
+erc20_token
+hash-71ab5cd794395ed015a125314c967cffd1c4b0c16e124b725844edbf66921e44
+casper-client query-global-state --node-address http://3.208.91.63:7777 \
+--state-root-hash=2215769e826601b8a75eac27b31961ce78c9e51fc3d9a7ed3b8ebb2f1d2c0542 \
+-k 8a99766ecfd5fa93caaed9adb6c46b9977dd787599cbf390f74b323b6e3dabed 
+<PUBLIC_KEY_AS_HEX> -g GLOBAL_STATE_HASH | jq -r
+
+casper-client query-global-state --node-address http://3.208.91.63:7777 -k 02035b320d0686db37ff50b0d7765b2c96de7acc32a2010979a027330d05570cf003 -g GLOBAL_STATE_HASH | jq -r
+
+casper-client get-state-root-hash --node-address http://3.208.91.63:7777/rpc
+1b57a4146c5b3fb75894eaaa688a3e9c57512e975f5ad91d924966e0091569a3
+
+casper-client query-global-state --node-address http://3.208.91.63:7777 \
+-b 2488f50046837ecaeac7287e50db6ec2566b26fb17a37cb3a0e70fd3ea16b53e \
+-k 02035b320d0686db37ff50b0d7765b2c96de7acc32a2010979a027330d05570cf003 
+
+--state-root-hash 2215769e826601b8a75eac27b31961ce78c9e51fc3d9a7ed3b8ebb2f1d2c0542 \
+
+
+casper-client query-state \
+    -n http://3.208.91.63:7777 \
+    --state-root-hash 2215769e826601b8a75eac27b31961ce78c9e51fc3d9a7ed3b8ebb2f1d2c0542 \
+    -k account-hash-1db644748720896236ef3d7506a4385acbe7f9d6816660eed3954fd9272efeba
+
+casper-client query-state \
+    -n http://3.208.91.63:7777 \
+    -k hash-0072c68050b9cb0360a2e1790813fb9856f68ffc123115daca042e69bd3f9fc7 \
+    --state-root-hash 1b57a4146c5b3fb75894eaaa688a3e9c57512e975f5ad91d924966e0091569a3 \
+
+    2488f50046837ecaeac7287e50db6ec2566b26fb17a37cb3a0e70fd3ea16b53e
+
+casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key ed25519-keys/secret_key.pem \
+    --payment-amount 1000000000 \
+    --session-hash hash-0072c68050b9cb0360a2e1790813fb9856f68ffc123115daca042e69bd3f9fc7 \
+    --session-entry-point "balance_of" \
+    --session-arg "address:key='hash-4b05191dadb56bf3b7988167e771023298f609b6596a65fe784cfecd1f262000'" 
+
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-path CasperWork/vestFix/target/wasm32-unknown-unknown/release/vest_mod.wasm \
+   --session-arg "erc20_contract_hash:key='hash-2c8215ef579f70c89402ca8c3ac433331243f2ce80805aa4f05d73115e266f8e'" \
+   --session-arg "address:key='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
+
+015c3b6de747e61d6cf9e2ea6593f68f34947277219c3cb5813e79634d300c0a4f
+
+
+-----------deploy erc20 token------------------
+root@jackson:~/deployContractByJS# node ./depoloyBySigner.js 
+-----------deploy balance contract-------------
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+>   --chain-name casper-test   \
+>     --secret-key ed25519-keys/secret_key.pem  \
+>    --payment-amount 60000000000   \
+>    --session-path /root/CasperWork/erc20_balance/contract/target/wasm32-unknown-unknown/release/contract1.wasm \
+>    --session-arg "erc20_contract_hash:key='hash-0072c68050b9cb0360a2e1790813fb9856f68ffc123115daca042e69bd3f9fc7'" \
+>    --session-arg "token_owner:key='hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" 
+// token_owner : account_hash, erc20_contract_hash : contract hash (writecontract)
+
+
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "transfer"
+   --session-hash hash-2c8215ef579f70c89402ca8c3ac433331243f2ce80805aa4f05d73115e266f8e \
+   --session-arg "recipient:key='hash-2c8215ef579f70c89402ca8c3ac433331243f2ce80805aa4f05d73115e266f8e'" \
+   --session-arg "amount:U256='100000000000'" \
+
+
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "transfer" \
+   --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
+   --session-arg "recipient:key='account-hash-e20f7a330780f863af1c6cde11b37c4430dd429b5aeaa8da5dc6a934d8533429'" \
+   --session-arg "amount:U256='115000000000'" 
+
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "approve" \
+   --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
+   --session-arg "spender:key='hash-285448f572fa7f3801a649ef177939895eb4da303216ab0a5ee64a9fbe692b5c'" \
+   --session-arg "amount:U256='50000000000'" 
+
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "allowance" \
+   --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
+   --session-arg "spender:key='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
+   --session-arg "amount:U256='50000000000'" 
+
+
+   0e75e93b424947440a6581eedcb174c877207be7d519e0a7ad0dd775e39528e1
+   
+   casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "mint" \
+   --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
+   --session-arg "owner:key='hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
+   --session-arg "amount:U256='230000000000'" 
+270000000000
+110000000000
+3355000000000
+   casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "balance_of" \
+   --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
+   --session-arg "address:key='account-hash-4b05191dadb56bf3b7988167e771023298f609b6596a65fe784cfecd1f262000'" \
+ 
+   
+   0e75e93b424947440a6581eedcb174c877207be7d519e0a7ad0dd775e39528e1
+
+   casper-client put-deploy \
+    --node-address http://3.208.91.63:7777 \
+    --chain-name casper-test \
+    --secret-key ed25519-keys/secret_key.pem \
+    --payment-amount 1000000000 \
+    --session-hash hash-d1a1d020a551c9e08ff87b432da9133e2bd272039c989a1cebb541dc0df8f09e \
+    --session-entry-point "ent_init" \
+    --session-arg "admin:account_hash='account-hash-1db644748720896236ef3d7506a4385acbe7f9d6816660eed3954fd9272efeba'" \
+    --session-arg "recipient:account_hash='account-hash-4b05191dadb56bf3b7988167e771023298f609b6596a65fe784cfecd1f262000'" \
+    --session-arg "cliff_timestamp:u128='1340'" \
+    --session-arg "cliff_amount:u128='2021'" \
+    --session-arg "drip_duration:u128='20643'" \
+    --session-arg "drip_amount:u128='2011'" \
+    --session-arg "total_amount:u128='1220'" \
+    --session-arg "admin_release_duration:u128='120'" 
