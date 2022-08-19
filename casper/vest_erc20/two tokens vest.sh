@@ -4,22 +4,22 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --payment-amount 60000000000   \
    --session-entry-point "approve" \
    --session-hash hash-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0 \
-   --session-arg "spender:key='hash-0246a5163d4881fcde0cb275d6e41a92b17330e7f859c8e7199a012150545ef7'" \
-   --session-arg "amount:U256='68000000000'" 
+   --session-arg "spender:key='hash-9bb3016655e23867b123e2cd98c0f7ce7408fa693e2f7030750183cf7b0b4de3'" \
+   --session-arg "amount:U256='100000000000000'" 
 
 casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-fb09b0e03a0ef6e26259b6f6e15e048a8a6d6dbe4759afac85b9c5cee318cfef \
+   --session-hash hash-4d38926c4797b48760ea84d79459ca71561e6b0f491d1cdee79e46d0e0e29e21 \
    --session-entry-point "init" \
-   --session-arg "scontract-hash:string='contract-package-wasm0246a5163d4881fcde0cb275d6e41a92b17330e7f859c8e7199a012150545ef7'" 
+   --session-arg "scontract-hash:string='contract-package-wasm9bb3016655e23867b123e2cd98c0f7ce7408fa693e2f7030750183cf7b0b4de3'" 
 
 casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-fb09b0e03a0ef6e26259b6f6e15e048a8a6d6dbe4759afac85b9c5cee318cfef \
+   --session-hash hash-4d38926c4797b48760ea84d79459ca71561e6b0f491d1cdee79e46d0e0e29e21 \
    --session-entry-point "lock" \
    --session-arg "cliff_durtime:u64='2000000002'"\
    --session-arg "cliff_amount:U256='2000000000'"\
@@ -27,11 +27,23 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
    --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" 
 
+casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+   --chain-name casper-test   \
+   --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-hash hash-4d38926c4797b48760ea84d79459ca71561e6b0f491d1cdee79e46d0e0e29e21 \
+   --session-entry-point "lock" \
+   --session-arg "cliff_durtime:u64='3600000000000'"\
+   --session-arg "cliff_amount:U256='100000000000000'"\
+   --session-arg "unit_time:u64='3600000000000'"\
+   --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
+   --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" 
+
    casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-fb09b0e03a0ef6e26259b6f6e15e048a8a6d6dbe4759afac85b9c5cee318cfef \
+   --session-hash hash-4d38926c4797b48760ea84d79459ca71561e6b0f491d1cdee79e46d0e0e29e21 \
    --session-entry-point "claimable_amont"\
    --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
    --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" \
@@ -41,7 +53,7 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-fb09b0e03a0ef6e26259b6f6e15e048a8a6d6dbe4759afac85b9c5cee318cfef \
+   --session-hash hash-4d38926c4797b48760ea84d79459ca71561e6b0f491d1cdee79e46d0e0e29e21 \
    --session-entry-point "claim"\
    --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
    --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" \

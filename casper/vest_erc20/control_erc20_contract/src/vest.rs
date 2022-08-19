@@ -46,15 +46,27 @@ pub struct RecipientInfo
 // }
 
 fn make_dictionary_item_key(owner: AccountHash, spender: ContractHash) -> String {
-    let mut preimage = Vec::new();
-    preimage.append(&mut owner.to_bytes().unwrap_or_revert());
-    preimage.append(&mut spender.to_bytes().unwrap_or_revert());
+    let sub_owner = owner.to_string();
+    let sub_spender = spender.to_string();
 
-    let key_bytes = runtime::blake2b(&preimage);
-    let mut prehex: String = hex::encode(&key_bytes);
-    prehex.pop(); //slice last letter to add index
-    prehex
+    let (str_acc_hash, _) = sub_owner.as_str().split_at(16);    
+    let (str_cont_hash, _) = sub_spender.as_str().split_at(15);
+
+    let newstr = String::from(str_acc_hash) + str_cont_hash ;
+    
+    newstr
 }
+
+// fn make_dictionary_item_key(owner: AccountHash, spender: ContractHash) -> String {
+//     let mut preimage = Vec::new();
+//     preimage.append(&mut owner.to_bytes().unwrap_or_revert());
+//     preimage.append(&mut spender.to_bytes().unwrap_or_revert());
+
+//     let key_bytes = runtime::blake2b(&preimage);
+//     let mut prehex: String = hex::encode(&key_bytes);
+//     prehex.pop(); //slice last letter to add index
+//     prehex
+// }
 
 #[derive(Default)]
 pub struct VestContract;
@@ -130,15 +142,6 @@ impl VestContract
         
         let key = runtime::get_key(KEY_NAME_DIC_LOCK_INFOS).unwrap_or_revert();
 
-        if uparse < 2 {
-            return RecipientInfo{
-                lock_timestamp:0,
-                lock_amount:U256::from(0),
-                vested_amount: U256::from(0),
-                release_time_unit: 0,
-                release_amount_per_unitime:U256::from(0),
-                release_total_time: 0};
-        }
 
         let uref_dic = *key.as_uref().unwrap_or_revert();
 
@@ -224,11 +227,14 @@ impl VestContract
         // self.verify_admin_account();
         {           
             utils::set_key("lockvest1", "lockvest1");
-            if cliff_durtime > 2000000000{
+            
+            //if cliff_durtime > 2000000000
+            {
                 interact_erc20::default().transfer_from(hash_token, reciep, self_contract_hash(), cliff_amount);
             utils::set_key("lockvest2", "lockvest2");
         }
-            if cliff_durtime > 2000000001{
+           // if cliff_durtime > 2000000001
+            {
                 utils::set_key("lockvest3", "lockvest3");
 
                 self.set_recipient_info(reciep, hash_token, 
@@ -248,32 +254,33 @@ impl VestContract
 
     pub fn claim(&mut self, acc_recip: AccountHash, hash_token: ContractHash, uparse: u64)
     {
-        if uparse < 1   { return ; }
+        //if uparse < 1   { return ; }
         let mut reci = self.get_recipient_infos(acc_recip, hash_token, uparse);
         
-        if uparse < 6   { return ; }
+        // if uparse < 6   { return ; }
         let stamp_now : u64 = runtime::get_blocktime().into();
 
         let past_hours : u64 = (stamp_now  - reci.lock_timestamp) / (reci.release_time_unit); // * 3600000
 
-        if uparse < 7   { return ; }
+        // if uparse < 7   { return ; }
         let mut vestable_until_now: U256 = reci.release_amount_per_unitime.checked_mul(U256::from(past_hours)).unwrap();
 
         if vestable_until_now > reci.lock_amount {
             vestable_until_now = reci.lock_amount;
         }
-        if uparse < 8   { return ; }
+        // if uparse < 8   { return ; }
 
         let claimamount = vestable_until_now - reci.vested_amount;
         utils::set_key(RET_VAL_U256, claimamount);
 
         if  !claimamount.is_zero() {
-            if uparse > 7 {
+            // if uparse > 7 
+            {
              interact_erc20::default().transfer(hash_token, acc_recip, claimamount); }
 
             reci.vested_amount += claimamount;    
             
-            if uparse > 8
+            // if uparse > 8
             {self.set_recipient_vested_amount(acc_recip, hash_token, reci.vested_amount);}
 
             set_total_lock_amount(false, claimamount);        
@@ -283,13 +290,13 @@ impl VestContract
     
     pub fn claimable_amount(&mut self, acc_recip: AccountHash, hash_token: ContractHash, uparse: u64) -> U256
     {
-        if uparse < 4
-        { return U256::from(0); }
+        // if uparse < 4
+        //{ return U256::from(0); }
 
         let reci = self.get_recipient_infos(acc_recip, hash_token, uparse);
 
-        if uparse < 8 {
-        return U256::from(0); }
+        // if uparse < 8 
+        // {return U256::from(0); }
 
         let stamp_now : u64 = runtime::get_blocktime().into();
 
