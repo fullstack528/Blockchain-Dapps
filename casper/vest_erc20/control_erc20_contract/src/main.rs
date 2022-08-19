@@ -96,11 +96,10 @@ pub extern "C" fn claim()
 {
     let str_account_hash_reciepient: String = runtime::get_named_arg(ARG_NAME_RECIPIENT);
     let str_hash_token: String = runtime::get_named_arg(ARG_NAME_ERC20_TOKEN_HASH);
-    let uparse: u64 = runtime::get_named_arg("uparse");
 
     let acc_reciep = AccountHash::from_formatted_str(str_account_hash_reciepient.as_str()).expect("claim hash string format is error");
     let hash_token = ContractHash::from_formatted_str(str_hash_token.as_str()).expect("claim token hash string format is error");
-    VestContract::default().claim(acc_reciep, hash_token, uparse);    
+    VestContract::default().claim(acc_reciep, hash_token);    
 }
 
 #[no_mangle]
@@ -108,11 +107,10 @@ pub extern "C" fn claimable_amount()
 {
     let str_account_hash_reciepient: String = runtime::get_named_arg(ARG_NAME_RECIPIENT);
     let str_hash_token: String = runtime::get_named_arg(ARG_NAME_ERC20_TOKEN_HASH);
-    let uparse: u64 = runtime::get_named_arg("uparse");
 
     let acc_reciep = AccountHash::from_formatted_str(str_account_hash_reciepient.as_str()).expect("claimable hash string format is error");
     let hash_token = ContractHash::from_formatted_str(str_hash_token.as_str()).expect("claim token hash string format is error");
-    let retval = VestContract::default().claimable_amount(acc_reciep, hash_token, uparse);  
+    let retval = VestContract::default().claimable_amount(acc_reciep, hash_token);  
 
     runtime::ret(CLValue::from_t(retval).unwrap_or_revert());
 }

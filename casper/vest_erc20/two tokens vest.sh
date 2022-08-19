@@ -69,8 +69,18 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --payment-amount 60000000000   \
    --session-entry-point "transfer" \
    --session-hash hash-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0 \
-   --session-arg "recipient:key='account-hash-4b05191dadb56bf3b7988167e771023298f609b6596a65fe784cfecd1f262000'" \
+   --session-arg "recipient:key='account-hash-e20f7a330780f863af1c6cde11b37c4430dd429b5aeaa8da5dc6a934d8533429'" \
+   --session-arg "amount:U256='230000000000'" 
+
+   casper-client put-deploy     --node-address http://3.208.91.63:7777   \
+  --chain-name casper-test   \
+    --secret-key ed25519-keys/secret_key.pem  \
+   --payment-amount 60000000000   \
+   --session-entry-point "balance_of" \
+   --session-hash hash-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0 \
+   --session-arg "recipient:key='account-hash-e20f7a330780f863af1c6cde11b37c4430dd429b5aeaa8da5dc6a934d8533429'" \
    --session-arg "amount:U256='100000000000'" 
+
 
 1: lock_timestamp
 2: lock_amount
