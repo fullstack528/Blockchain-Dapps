@@ -12,7 +12,7 @@ extern crate alloc;
 use core::str::FromStr;
 
 use casper_contract::{contract_api::{runtime, storage}, unwrap_or_revert::UnwrapOrRevert};
-use casper_types::{runtime_args, ContractHash, Key, RuntimeArgs, account::AccountHash, U256, ContractPackageHash};
+use casper_types::{runtime_args, ContractHash, Key, RuntimeArgs, account::AccountHash, U256, ContractPackageHash, bytesrepr::ToBytes};
 
 use alloc::{
     collections::{BTreeMap}, //BTreeSet},
@@ -40,11 +40,11 @@ pub struct interact_erc20;
 
 impl interact_erc20
 {
-    pub fn init(&mut self, tconthash : String)
-    {   
-        let contHash = ContractHash::from_formatted_str(tconthash.as_str()).unwrap();
-        utils::set_key(KEY_NAME_TOKEN_HASH, contHash);
-    }
+    // pub fn init(&mut self, tconthash : String)
+    // {   
+    //     let contHash = ContractHash::from_formatted_str(tconthash.as_str()).unwrap();
+    //     utils::set_key(KEY_NAME_TOKEN_HASH, contHash);
+    // }
 
     pub fn get_token_hash(&self) -> ContractHash
     {
@@ -52,15 +52,14 @@ impl interact_erc20
     }
 
     pub fn transfer_from(&mut self
+        , hash_token: ContractHash
         , owner: AccountHash
         , spender: ContractPackageHash
         , amount: U256
     ) 
     {
-        let tokenhash = self.get_token_hash();
-
         runtime::call_contract(
-            tokenhash,                            //contracthash
+            hash_token,                            //contracthash
             ENTRY_POINT_NAME_TRANSFER_FROM,
             runtime_args! {
                 ARG_NAME_OWNER => Address::from(owner),         //owner : AccountHash
@@ -71,12 +70,13 @@ impl interact_erc20
     }
 
     pub fn transfer(&mut self
+        , hash_token: ContractHash
         , recipient: AccountHash
         , amount: U256
     ) 
-    {
+    {        
         runtime::call_contract(
-            self.get_token_hash(), 
+            hash_token, //self.get_token_hash(), 
             ENTRY_POINT_NAME_TRANSFER,
             runtime_args! {
                 ARG_NAME_RECIPIENT => Address::from(recipient),

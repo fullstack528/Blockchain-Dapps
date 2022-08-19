@@ -20,6 +20,7 @@ pub const ARG_NAME_ERC20_SELFCONTRACT_HASH: &str = "scontract-hash";
 
 pub const ARG_NAME_CLIFF_DURTIME: &str = "cliff_durtime";
 pub const ARG_NAME_CLIFF_AMOUNT: &str = "cliff_amount";
+pub const ARG_NAME_UNIT_TIME: &str = "unit_time";
 pub const ARG_NAME_RECIPIENT: &str = "recipient";
 
 pub const ENTRY_POINT_NAME_INIT: &str = "init";

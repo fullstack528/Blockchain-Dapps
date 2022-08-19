@@ -261,16 +261,6 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
   --chain-name casper-test   \
     --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-entry-point "transfer"
-   --session-hash hash-2c8215ef579f70c89402ca8c3ac433331243f2ce80805aa4f05d73115e266f8e \
-   --session-arg "recipient:key='hash-2c8215ef579f70c89402ca8c3ac433331243f2ce80805aa4f05d73115e266f8e'" \
-   --session-arg "amount:U256='100000000000'" \
-
-
-casper-client put-deploy     --node-address http://3.208.91.63:7777   \
-  --chain-name casper-test   \
-    --secret-key ed25519-keys/secret_key.pem  \
-   --payment-amount 60000000000   \
    --session-entry-point "transfer" \
    --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
    --session-arg "recipient:key='account-hash-e20f7a330780f863af1c6cde11b37c4430dd429b5aeaa8da5dc6a934d8533429'" \
@@ -281,9 +271,9 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
     --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
    --session-entry-point "approve" \
-   --session-hash hash-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60 \
-   --session-arg "spender:key='hash-285448f572fa7f3801a649ef177939895eb4da303216ab0a5ee64a9fbe692b5c'" \
-   --session-arg "amount:U256='50000000000'" 
+   --session-hash hash-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0 \
+   --session-arg "spender:key='hash-7f731f44f8429dacb8d81c52c72127a894347d85d94d79a9cfa51864da8d2b7f'" \
+   --session-arg "amount:U256='68000000000'" 
 
 casper-client put-deploy     --node-address http://3.208.91.63:7777   \
   --chain-name casper-test   \

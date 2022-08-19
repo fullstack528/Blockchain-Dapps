@@ -8,9 +8,10 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-d8757c139cf8a321d79dc36fe17bea029288d9faf8fd33b593b9f1c402481e22 \
+   --session-hash hash-f48937440423aaba4a75ffc69d5e1742fe3ce3cb4fbd5580c40b610ed9e7a3b2 \
    --session-entry-point "init" \
-   --session-arg "scontract-hash:string='contract-package-wasm285448f572fa7f3801a649ef177939895eb4da303216ab0a5ee64a9fbe692b5c'" \
+   --session-arg "scontract-hash:string='contract-package-wasm7f731f44f8429dacb8d81c52c72127a894347d85d94d79a9cfa51864da8d2b7f'" 
+   
    --session-arg "token-hash:string='contract-b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60'" \
     
 
@@ -22,19 +23,22 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-d8757c139cf8a321d79dc36fe17bea029288d9faf8fd33b593b9f1c402481e22 \
+   --session-hash hash-f48937440423aaba4a75ffc69d5e1742fe3ce3cb4fbd5580c40b610ed9e7a3b2 \
    --session-entry-point "lock" \
-   --session-arg "cliff_durtime:u64='2000000'"\
-   --session-arg "cliff_amount:U256='200000000'"\
-   --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" 
+   --session-arg "cliff_durtime:u64='2000000000'"\
+   --session-arg "cliff_amount:U256='2000000000'"\
+   --session-arg "unit_time:u64='10000000'"\
+   --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
+   --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" 
 
    casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --chain-name casper-test   \
    --secret-key ed25519-keys/secret_key.pem  \
    --payment-amount 60000000000   \
-   --session-hash hash-d8757c139cf8a321d79dc36fe17bea029288d9faf8fd33b593b9f1c402481e22 \
+   --session-hash hash-f48937440423aaba4a75ffc69d5e1742fe3ce3cb4fbd5580c40b610ed9e7a3b2 \
    --session-entry-point "claimable_amount"\
    --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
+   --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" 
    --session-arg "cliff_amount:u64='1'" 
 
    casper-client put-deploy     --node-address http://3.208.91.63:7777   \
