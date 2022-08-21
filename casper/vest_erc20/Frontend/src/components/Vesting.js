@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Divider, Grid, Typography, Box, Button,  TextField } from "@mui/material";
+import { useEffect, useState, useRef } from "react";
+import { Divider, Grid, Typography, Box, Button,  TextField, Backdrop, CircularProgress } from "@mui/material";
 
 import {useSelector} from "react-redux";
 import BigNumber from "big-number";
 
-import {vestingContractAddress, vestingContractPackageHash, vestingTokenAddress, vestingTokenSymbol } from "../config";
+import {vestingContractAddress, vestingContractPackageHash, vestingTokenAddress } from "../config";
 import useCasperWeb3Provider from "../web3";
 
 const Vesting = () => {
@@ -19,94 +19,177 @@ const Vesting = () => {
         getClaimableAmount,
         getVestedAmount,
         getHourlyVesting,
-        calc_claimable_amount
+        calc_claimable_amount,
+        getSymbol,
+        getDecimal
       } = useCasperWeb3Provider();
 
+    
     const activeAddress = useSelector(state => state.auth.currentWallet);
-
+    const [working, setWorking] = useState(false);
     const [switchPanal, setSwitchPanal] = useState(true);
     const [totalVolumnInVesting, setTotalVolumnVested] = useState(0);
     const [myVested, setMyVested] = useState(0);
     const [myBalance, setMyBalance] = useState(0);
+    const [VestingTokenHash, setVestingTokenHash] = useState(vestingTokenAddress);
     const [VestingAmount, setVestingAmount] = useState(0);
     const [VestingDuration, setVestingDuration] = useState(1);
     const [receipentAddress, setReceipentAddress] = useState("0202cccb84498ead918e208e8424ec2b13c493c2d76f7d246b51596d12cf5c84e58f");
     const [hourlyVesting, sethourlyVesting] = useState(0);
     const [claimableAmount, setClaimableAmount] = useState(0);
+    const [ClaimPeriod, setClaimPeriod] = useState(1);
+    const [vestingTokenSymbol, setVestingTokenSymbol] = useState("ACME"); 
+    const [vestingTokenDecimal, setVestingTokenDecimal] = useState(6); 
+    const prevVestingTokenHash = usePrevious(VestingTokenHash);
+    const prevActiveAddress = usePrevious(activeAddress);
+
+    function usePrevious(value) {
+        // The ref object is a generic container whose current property is mutable ...
+        // ... and can hold any value, similar to an instance property on a class
+        const ref = useRef();
+        // Store current value in ref
+        useEffect(() => {
+          ref.current = value;
+        }, [value]); // Only re-run if value changes
+        // Return previous value (happens before update in useEffect above)
+        return ref.current;
+      }
 
     useEffect(() => {        
-      if(!!activeAddress && activeAddress !== "") {
+      if(!!activeAddress && activeAddress !== "" && activeAddress !== prevActiveAddress) {
         initializeInformation();
       }
     }, [activeAddress])
+
+    useEffect(() => {
+        if(!!VestingTokenHash && VestingTokenHash !== "" && VestingTokenHash !== prevVestingTokenHash) {      
+            setWorking(true); 
+            try{    
+             getTokenSymbol();
+             getMyTokenBalance();      
+             getTokenDecimal();        
+            }catch(e){ setWorking(false); }
+             setWorking(false);     
+        }
+    }, [VestingTokenHash])
 
     useEffect(() => {
         const interval = setInterval(() => {
             if(!!activeAddress && activeAddress !== "") {
                 calcAndReadClaimiInfor();
             }
-        }, 6000000);
+        }, 18000000);
         return () => clearInterval(interval);
     }, []);
 
-    const calcAndReadClaimiInfor = async () => {         
-        await calc_claimable_amount(activeAddress);
+    const calcAndReadClaimiInfor = async () => {    
+        setWorking(true);
+        try{     
+        await calc_claimable_amount(activeAddress, VestingTokenHash);
         await fetchClaimableAmount();
+        }catch(e){setWorking(false)}
+        setWorking(false);
     }
 
-    const initializeInformation = async () => {        
+    const initializeInformation = async () => {           
+        setWorking(true);     
+        try{
         await getTotalVoumnOfVesting();
+        await getTokenSymbol();
+        await getTokenDecimal();
         await getMyTokenBalance();        
         await getMyVestedAmount();
         await getMyHourlyVesting();
         await calcAndReadClaimiInfor();
+        }catch(e){setWorking(false);}
+        setWorking(false);
     }
 
     const getTotalVoumnOfVesting = async () => {
         try
         {
             let tva = await totalVestingAmount(vestingContractAddress);
-            console.log("tva = ", tva && Number(tva)/1000000);
-            if(tva) setTotalVolumnVested(Number(tva)/1000000);
+            console.log("tva = ", tva && Number(tva)/(10**vestingTokenDecimal));
+            if(tva) setTotalVolumnVested(Number(tva)/(10**vestingTokenDecimal));
         }
         catch(error){
             console.log(error);
         }
     }
 
-    const getMyTokenBalance = async () => {
-        const balance = await balanceOf(vestingTokenAddress, activeAddress);
-        console.log("balance = ", Number(balance)/1000000);
-        setMyBalance(Number(balance)/1000000);
+    const getTokenDecimal = async () => {
+        try
+        {
+            let decimal = await getDecimal(VestingTokenHash, activeAddress);
+            console.log("decimal = ", decimal._hex);
+            if(decimal) setVestingTokenDecimal(Number(decimal._hex));
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    const getTokenSymbol = async () => {
+        try
+        {
+            let symbol = await getSymbol(VestingTokenHash, activeAddress);
+            console.log("symbol = ", symbol);
+            if(symbol) setVestingTokenSymbol(symbol);
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    const getMyTokenBalance = async () => {        
+        if(!!VestingTokenHash && VestingTokenHash !== "") {
+            try{
+            const balance = await balanceOf(VestingTokenHash, activeAddress);
+            console.log("balance = ", Number(balance)/(10**vestingTokenDecimal));
+            setMyBalance(Number(balance)/(10**vestingTokenDecimal));
+            }catch(error){}
+        }
     }
 
     const getMyVestedAmount = async () => {        
-        const va = await getVestedAmount(activeAddress);
-        if(va) 
-        {
-            let temp = Number(va._hex)/1000000;
-            console.log(temp);
-            setMyVested(temp);        
+        if(!!activeAddress && activeAddress !== "" && !!VestingTokenHash && VestingTokenHash !== "") {
+            try{
+            const va = await getVestedAmount(activeAddress, VestingTokenHash);
+            if(va) 
+            {
+                let temp = Number(va._hex)/(10**vestingTokenDecimal);
+                console.log(temp);
+                setMyVested(temp);        
+            }
+        }catch(error){}
         }
     }
 
     const getMyHourlyVesting = async () => { 
-        const hv = await getHourlyVesting(activeAddress);
-        if(hv) 
-        {
-            let temp = Number(hv._hex);
-            console.log(temp);
-            sethourlyVesting(temp);        
+        if(!!activeAddress && activeAddress !== "" && !!VestingTokenHash && VestingTokenHash !== "") {
+            try{
+            const hv = await getHourlyVesting(activeAddress, VestingTokenHash);
+            if(hv) 
+            {
+                let temp = Number(hv._hex)/(10**vestingTokenDecimal);
+                console.log(temp);
+                sethourlyVesting(temp);        
+            }
+        }catch(error){}
         }
     }
 
     const fetchClaimableAmount = async () => {
-        const lockamount = await getClaimableAmount(activeAddress);
-        if(lockamount) 
-        {
-            let aa = Number(lockamount._hex)/1000000;
-            console.log(aa);
-            setClaimableAmount(aa);        
+        if(!!activeAddress && activeAddress !== "" && !!VestingTokenHash && VestingTokenHash !== "") {
+            try{
+            const lockamount = await getClaimableAmount(activeAddress, VestingTokenHash);
+            if(lockamount) 
+            {
+                let aa = Number(lockamount._hex)/(10**vestingTokenDecimal);
+                console.log("claimable_amount = ", aa);
+                setClaimableAmount(aa);        
+            }
+        }catch(error){}
         }
     }
 
@@ -115,38 +198,67 @@ const Vesting = () => {
     }    
       
     const handleVest = async () => {       
-        if(!!activeAddress && activeAddress !== "") { 
+        if(!!activeAddress && activeAddress !== "" && !!VestingTokenHash && VestingTokenHash !== "") { 
+            setWorking(true);
+            let currentAllowance,vestingAmount;
             try
             {
-                let currentAllowance =  await allowanceOf(vestingTokenAddress, vestingContractPackageHash, activeAddress);
+                currentAllowance =  await allowanceOf(VestingTokenHash, vestingContractPackageHash, activeAddress);
                 currentAllowance =  BigNumber(Math.floor(Number(currentAllowance)));
                 console.log("currentAllowance = ", currentAllowance.toString());
-                var decimals =  BigNumber("10").power(6);
-                let vestingAmount = BigNumber((VestingAmount).toString()).multiply(decimals);
+                var decimals =  BigNumber("10").power(vestingTokenDecimal);
+                vestingAmount = BigNumber((VestingAmount).toString()).multiply(decimals);
                 var max_allowance =  BigNumber("9999999999999").multiply(decimals);
                 if(currentAllowance - BigNumber(VestingAmount) < 0)
                 {   
-                    await approve(max_allowance.toString(), vestingTokenAddress, vestingContractPackageHash, activeAddress);
-                }
-                await vest(vestingAmount, BigNumber(VestingDuration*1000), receipentAddress, activeAddress);
-                await initializeInformation();
+                    await approve(max_allowance.toString(), VestingTokenHash, vestingContractPackageHash, activeAddress);
+                }               
             }
             catch(error){
+                setWorking(false);
                 console.log("handleVest exception : ", error);
+                return;
             }
+            try{                
+                await vest(VestingTokenHash, vestingAmount, BigNumber(VestingDuration), BigNumber(ClaimPeriod), receipentAddress, activeAddress);
+            }catch(error){
+                setWorking(false);
+                return;
+            }
+            try{                
+                setVestingAmount(0);
+                setVestingDuration(1);
+                setClaimPeriod(1);
+                await initializeInformation();
+            }catch(error){
+                setWorking(false);
+                return;
+            }
+            setWorking(false);
         }
     }
 
     const handleClaim = async () => {       
-        if(!!activeAddress && activeAddress !== "") { 
+        if(!!activeAddress && activeAddress !== "") {             
+            setWorking(true);
             try
             {
-                await claim(activeAddress);
+                await claim(activeAddress, receipentAddress, VestingTokenHash);
+            }
+            catch(error){
+                setWorking(false);
+                console.log("claim error : ", error);
+                return;
+            }
+            try
+            {
                 await initializeInformation();
             }
             catch(error){
+                setWorking(false);
                 console.log("claim error : ", error);
             }
+            setWorking(false);
         }
     }
 
@@ -163,7 +275,7 @@ const Vesting = () => {
                             !switchPanal && 
                             <>
                             <Grid item sm={3} md={3} lg={3} xl={3}>
-                                <Typography sx={{ color: 'white' }} variant="body1">Hourly Vesting</Typography>
+                                <Typography sx={{ color: 'white' }} variant="body1">Hourly Rate</Typography>
                                 <Typography sx={{ color: '#fa9422' }} variant="h6" fontWeight='bold'>{hourlyVesting} {vestingTokenSymbol} </Typography>
                             </Grid>
                             <Grid item sm={3} md={3} lg={3} xl={3}>
@@ -174,6 +286,33 @@ const Vesting = () => {
                         }
                         <Grid item sm={12} md={12} lg={12} xl={12} mt={2}>
                             <Divider color="white" />
+                        </Grid>
+                        
+                        <Grid container alignItems='center' justifyContent='space-between' style={{ padding: 2, marginTop:"10px", border: '2px solid white', borderRadius: 12 }}>
+                            <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
+                                <Typography variant="h6" sx={{ color: 'white' }} align="left">Token Hash</Typography>
+                            </Grid>
+                            <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
+                                <Typography variant="h6" sx={{ color: 'white' }} align="right"></Typography>
+                            </Grid>
+                            <Grid item sm={6} md={6} lg={6} xl={6} px={2} py={1}>
+                                <Grid container alignItems='flex-end' >
+                                    <Grid item >
+                                        <TextField size="medium" type='text' variant="standard" defaultValue={""} 
+                                            sx={{ backgroundColor: 'transparent', input: { color: 'white', borderColor: 'white', fontSize: 16 }, width: 800 }} 
+                                            value={ VestingTokenHash }
+                                            onChange={(e) => setVestingTokenHash(e.target.value)}
+                                            placeholder="b02ec9fe439a945bcc0cc4a786f22fab7ae41829e10ea029e6f82af1b3833b60" 
+                                        />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item sm={6} md={6} lg={6} xl={6} px={2} py={1}>
+                                <Grid container alignItems='center' justifyContent='right'>
+                                    <Grid item sm={6} md={3} lg={3} xl={3}>                                                            
+                                    </Grid>                                                       
+                                </Grid>
+                            </Grid>
                         </Grid>
                         <Grid item sm={12} md={12} lg={12} xl={12} p={2}>
                             <Grid container>
@@ -192,11 +331,12 @@ const Vesting = () => {
                                             </Box>
                                         </Grid>
                                     </Grid>
+                                    
                                     {switchPanal ? (
                                         <>
-                                            <Grid container alignItems='center' justifyContent='space-between' style={{ border: '2px solid white', borderRadius: 12 }}>
+                                            <Grid container alignItems='center' justifyContent='space-between' style={{ border: '2px solid white', marginTop:"10px", borderRadius: 12 }}>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
-                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Vesting Amount</Typography>
+                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Amount</Typography>
                                                 </Grid>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
                                                     <Typography variant="h6" sx={{ color: 'white' }} align="right">Wallet balance: {myBalance} {vestingTokenSymbol}</Typography>
@@ -227,7 +367,7 @@ const Vesting = () => {
                                             </Grid>
                                             <Grid container alignItems='center' justifyContent='space-between' style={{ border: '2px solid white', marginTop:"10px", borderRadius: 12 }}>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
-                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Vesting Duration</Typography>
+                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Duration</Typography>
                                                 </Grid>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
                                                     <Typography variant="h6" sx={{ color: 'white' }} align="right"></Typography>
@@ -246,13 +386,38 @@ const Vesting = () => {
                                                 </Grid>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} py={1}>
                                                     <Grid container alignItems='center' justifyContent='right'>
-                                                        <Typography color='#fff'>Second</Typography>                                                     
+                                                        <Typography color='#fff'>ms</Typography>                                                     
                                                     </Grid>
                                                 </Grid>
-                                            </Grid>                                            
+                                            </Grid>            
                                             <Grid container alignItems='center' justifyContent='space-between' style={{ border: '2px solid white', marginTop:"10px", borderRadius: 12 }}>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
-                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Receipent publick key</Typography>
+                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Claim Period</Typography>
+                                                </Grid>
+                                                <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
+                                                    <Typography variant="h6" sx={{ color: 'white' }} align="right"></Typography>
+                                                </Grid>
+                                                <Grid item sm={6} md={6} lg={6} xl={6} px={2} py={1}>
+                                                    <Grid container alignItems='flex-end' >
+                                                        <Grid item >
+                                                            <TextField size="medium" type='number' variant="standard" defaultValue={"365.45"} 
+                                                                sx={{ backgroundColor: 'transparent', input: { color: 'white', borderColor: 'white', fontSize: 24 }, width: 200 }} 
+                                                                value={ClaimPeriod}
+                                                                onChange={(e) => setClaimPeriod(e.target.value)}
+                                                                placeholder="0.00" 
+                                                            />
+                                                        </Grid>
+                                                    </Grid>
+                                                </Grid>
+                                                <Grid item sm={6} md={6} lg={6} xl={6} px={2} py={1}>
+                                                    <Grid container alignItems='center' justifyContent='right'>
+                                                        <Typography color='#fff'>ms</Typography>                                                     
+                                                    </Grid>
+                                                </Grid>
+                                            </Grid>                                          
+                                            <Grid container alignItems='center' justifyContent='space-between' style={{ border: '2px solid white', marginTop:"10px", borderRadius: 12 }}>
+                                                <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
+                                                    <Typography variant="h6" sx={{ color: 'white' }} align="left">Receipent public key</Typography>
                                                 </Grid>
                                                 <Grid item sm={6} md={6} lg={6} xl={6} px={2} pt={1}>
                                                     <Typography variant="h6" sx={{ color: 'white' }} align="right"></Typography>
@@ -312,6 +477,13 @@ const Vesting = () => {
                     </Grid>
                 </Grid>
             </Grid>
+            
+            <Backdrop
+              sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={working}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
         </div >
     )
 };
