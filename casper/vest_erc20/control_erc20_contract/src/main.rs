@@ -29,8 +29,8 @@ use contract::{
     constants::{
         CONTRACT_NAME, CONTRACT_VERSION, CONTRACT_HASH, VESTOR_PACKAGE_NAME, VESTOR_UREF_NAME,
         ARG_NAME_ERC20_TOKEN_HASH, ARG_NAME_ERC20_SELFCONTRACT_HASH,
-        ARG_NAME_CLIFF_DURTIME, ARG_NAME_CLIFF_AMOUNT, ARG_NAME_RECIPIENT, ARG_NAME_UNIT_TIME, 
-        KEY_NAME_TOTAL_LOCK_AMOUNT,
+        ARG_NAME_CLIFF_DURTIME, ARG_NAME_CLIFF_AMOUNT, ARG_NAME_RECIPIENT, ARG_NAME_UNIT_TIME, ARG_NAME_CLIFF_UNIX_TIMESTAMP, 
+        KEY_NAME_TOTAL_LOCK_AMOUNT, ARG_NAME_ID_VEST, 
         ENTRY_POINT_NAME_INIT,
         ENTRY_POINT_NAME_LOCK,
         ENTRY_POINT_NAME_CLAIM,
@@ -80,6 +80,8 @@ pub extern "C" fn init() {
 
 #[no_mangle]
 pub extern "C" fn lock(){
+    
+    let cliff_unix_timestamp: u64 = runtime::get_named_arg(ARG_NAME_CLIFF_UNIX_TIMESTAMP);
     let cliff_durtime: u64 = runtime::get_named_arg(ARG_NAME_CLIFF_DURTIME);
     let cliff_amount: U256 = runtime::get_named_arg(ARG_NAME_CLIFF_AMOUNT);
     let unit_time: u64 = runtime::get_named_arg(ARG_NAME_UNIT_TIME);
@@ -88,7 +90,7 @@ pub extern "C" fn lock(){
     
     let hash_reciep = AccountHash::from_formatted_str(str_account_hash_reciepient.as_str()).expect("lock hash string format is error");
     let hash_token = ContractHash::from_formatted_str(str_hash_token.as_str()).expect("lock token hash string format is error");
-    VestContract::default().lock_vest(hash_reciep, hash_token, cliff_durtime, unit_time, cliff_amount); 
+    VestContract::default().lock_vest(hash_reciep, hash_token, cliff_unix_timestamp, cliff_durtime, unit_time, cliff_amount); 
 }
 
 #[no_mangle]
@@ -96,10 +98,13 @@ pub extern "C" fn claim()
 {
     let str_account_hash_reciepient: String = runtime::get_named_arg(ARG_NAME_RECIPIENT);
     let str_hash_token: String = runtime::get_named_arg(ARG_NAME_ERC20_TOKEN_HASH);
+    let id_vest: u32 = runtime::get_named_arg(ARG_NAME_ID_VEST);
+    
+    let uparse: u64 = runtime::get_named_arg("uparse");
 
     let acc_reciep = AccountHash::from_formatted_str(str_account_hash_reciepient.as_str()).expect("claim hash string format is error");
     let hash_token = ContractHash::from_formatted_str(str_hash_token.as_str()).expect("claim token hash string format is error");
-    VestContract::default().claim(acc_reciep, hash_token);    
+    VestContract::default().claim(acc_reciep, hash_token, id_vest, uparse);    
 }
 
 #[no_mangle]
@@ -107,10 +112,12 @@ pub extern "C" fn claimable_amount()
 {
     let str_account_hash_reciepient: String = runtime::get_named_arg(ARG_NAME_RECIPIENT);
     let str_hash_token: String = runtime::get_named_arg(ARG_NAME_ERC20_TOKEN_HASH);
+    let id_vest: u32 = runtime::get_named_arg(ARG_NAME_ID_VEST);
+    let uparse: u64 = runtime::get_named_arg("uparse");
 
     let acc_reciep = AccountHash::from_formatted_str(str_account_hash_reciepient.as_str()).expect("claimable hash string format is error");
     let hash_token = ContractHash::from_formatted_str(str_hash_token.as_str()).expect("claim token hash string format is error");
-    let retval = VestContract::default().claimable_amount(acc_reciep, hash_token);  
+    let retval = VestContract::default().claimable_amount(acc_reciep, hash_token, id_vest, uparse);  
 
     runtime::ret(CLValue::from_t(retval).unwrap_or_revert());
 }
@@ -137,6 +144,7 @@ fn get_entry_points() -> EntryPoints {
     entry_points.add_entry_point(EntryPoint::new(
         ENTRY_POINT_NAME_LOCK,
         vec![
+            Parameter::new(ARG_NAME_CLIFF_UNIX_TIMESTAMP, u64::cl_type()),
             Parameter::new(ARG_NAME_CLIFF_DURTIME, u64::cl_type()),
             Parameter::new(ARG_NAME_CLIFF_AMOUNT, U256::cl_type()),
             Parameter::new(ARG_NAME_UNIT_TIME, u64::cl_type()),
@@ -155,6 +163,9 @@ fn get_entry_points() -> EntryPoints {
         vec![
             Parameter::new(ARG_NAME_RECIPIENT, String::cl_type()),
             Parameter::new(ARG_NAME_ERC20_TOKEN_HASH, String::cl_type()),
+            Parameter::new(ARG_NAME_ID_VEST, u32::cl_type()),
+            Parameter::new("uparse", u64::cl_type()),
+            
         ],
         CLType::I32,
         EntryPointAccess::Public,
@@ -166,6 +177,7 @@ fn get_entry_points() -> EntryPoints {
         vec![
             Parameter::new(ARG_NAME_RECIPIENT, String::cl_type()),
             Parameter::new(ARG_NAME_ERC20_TOKEN_HASH, String::cl_type()),
+            Parameter::new(ARG_NAME_ID_VEST, u32::cl_type()),
             Parameter::new("uparse", u64::cl_type()),
         ],
         CLType::U256,

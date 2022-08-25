@@ -23,7 +23,7 @@ casper-client put-deploy     --node-address http://3.208.91.63:7777   \
    --session-entry-point "lock" \
    --session-arg "cliff_utimestamp:u64='2300000'"\
    --session-arg "cliff_durtime:u64='3300000'"\
-   --session-arg "cliff_amount:U256='200000000'"\
+   --session-arg "cliff_amount:U256='10000000'"\
    --session-arg "unit_time:u64='15000'"\
    --session-arg "recipient:string='account-hash-0256f840a7b330d8164779c51e1af3959d94d1dd4b9d0bb2e4acf85f094a4bf4'" \
    --session-arg "token-hash:string='contract-de93171e1867e787f771a8ad04dd33b1167fbf9cdde1468443dcb640fccca1a0'" 

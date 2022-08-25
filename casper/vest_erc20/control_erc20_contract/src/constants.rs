@@ -18,10 +18,12 @@ pub const VESTOR_UREF_NAME: &str = "vestor_access_uref";
 pub const ARG_NAME_ERC20_TOKEN_HASH: &str = "token-hash";
 pub const ARG_NAME_ERC20_SELFCONTRACT_HASH: &str = "scontract-hash";
 
+pub const ARG_NAME_CLIFF_UNIX_TIMESTAMP: &str = "cliff_utimestamp";
 pub const ARG_NAME_CLIFF_DURTIME: &str = "cliff_durtime";
 pub const ARG_NAME_CLIFF_AMOUNT: &str = "cliff_amount";
 pub const ARG_NAME_UNIT_TIME: &str = "unit_time";
 pub const ARG_NAME_RECIPIENT: &str = "recipient";
+pub const ARG_NAME_ID_VEST: &str = "vest_id";
 
 pub const ENTRY_POINT_NAME_INIT: &str = "init";
 pub const ENTRY_POINT_NAME_LOCK: &str = "lock";
@@ -39,5 +41,15 @@ pub const ENTRY_POINT_NAME_TRANSFER: &str = "transfer";
 pub const ARG_NAME_OWNER: &str = "owner";
 pub const ARG_NAME_SPENDER: &str = "spender";
 pub const ARG_NAME_AMOUNT: &str = "amount";
+
+pub const CH_INDEX_LOCK_UNIX_TIMESTAMP: char = '0';
+pub const CH_INDEX_LOCK_TIMESTAMP: char = '1';
+pub const CH_INDEX_LOCK_AMOUNT: char = '2';
+pub const CH_INDEX_VESTED_AMOUNT: char = '3';
+pub const CH_INDEX_RELEASE_TIME_UNIT: char = '4';
+pub const CH_INDEX_RELEASE_AMOUNT_PER_UNITTIME: char = '5';
+pub const CH_INDEX_RELEASE_TOTAL_TIME: char = '6';
+pub const CH_INDEX_CLAIMABLE_AMOUNT: char = '7';
+
 
 
