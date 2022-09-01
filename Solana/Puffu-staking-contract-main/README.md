@@ -1,5 +1,5 @@
 # Puffu-staking-contract for dapps https://puffu-staking.netlify.app/
-Standard Program for nft staking on Solana
+Standard Program for nft staking on Solana.
 Main sources were removed and are in private repos.
 ## Overview
 This is anchor project for nft staking written by fullstack528
